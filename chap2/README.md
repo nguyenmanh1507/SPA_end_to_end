@@ -16,7 +16,7 @@ Pass đầu tiên, JavaScript engine đi qua code và làm 3 điều:
 2. Khai báo các biến cục bộ, bào gồm cả các anonymous function được gán vào biến cục bộ, nhưng không khởi tạo chúng.
 3. Khai báo và khởi tạo các function.
 
-```
+```javascript
 function myFunction( arg1, arg2 ) { // - (1)
   var local_var = 'foo',            // --- 
       a_function = function() {     // (2)
