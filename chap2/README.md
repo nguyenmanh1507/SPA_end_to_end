@@ -90,3 +90,53 @@ Trước đó, chúng ta đã nói về cách JavaScript engine tạo 2 pass tr�
 
 Hiểu execution context object sẽ là key để hiểu các chương còn lại, vì vậy hãy xem vòng đời của một execution context object và JavaScript code cái mà tạo ra nó.
 
+_Excution context object - first pass_
+
+```javascript
+outer(1);                   //(1)
+function outer(arg) {       //(2)
+  var local_val = 'foo';    //(3)
+
+  function inner() {        //(4)
+    consol.log('inner');
+  }
+  inner();                  //(5)
+}
+
+/*
+ - (1): {} - An empty execution context object is
+        created when 'outer' is invoked
+ - (2): {arg: 1} - Arguments are declared and assigned
+ - (3): {arg:1, local_val: undefined} - Local variables are declared but not assigned
+ - (4): {arg:1, local_val: undefined, inner: function() {...}} - Functions are declared and assigned
+        but not executed
+ - (5): Nothing happens, code isn't executed on the first pass
+*/
+```
+
+Bây giờ các argument và function đã được khai báo và được gán, local variable đã được khai báo, second pass được tạo ra, thực thi JavaScript và gán định nghĩa vào biến.
+
+_Excution context object - second pass_
+
+```javascript
+outer(1);                   //(1)
+function outer(arg) {       
+  var local_val = 'foo';    
+
+  function inner() {        //(2)
+    consol.log('inner');
+  }
+  inner();                  //(3)
+}
+
+/*
+ - (1): {arg:1, local_val: undefined, inner: function() {...}}
+ - (2): {arg:1, local_val: 'foo', inner: function() {...}}
+        - Local variables are assigned as code is executed
+ - (3): {arg:1, local_val: 'foo', inner: function() {...}}
+        - The attributes representing variables on this execution context object
+        remain the same, but when function inner invoked, new execution context object
+        is created inside this one
+*/
+```
+
